@@ -1,0 +1,81 @@
+<img src="assets/img/burger.png" class="burger">
+
+<h1>Eat-Da-Burger!</h1>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-4">
+            {{#each burgers}}
+            <div>
+                {{this.burger_name}}
+                <button id="{{this.id}}" name="{{this.burger_name}}" class="devoured">Devour It</button>
+            </div>
+            {{/each}}
+        </div>
+
+        <div class="col-sm-4">
+
+            <div class="newBurger">
+
+                <form class="button-size">
+                    <textarea type="text" name="burger"></textarea>
+                </form>
+                <br>
+                <button type="submit" id="addBurger">Submit</button>
+
+                <h5>Enter a burger you want to eat Click the "Submit" button</h2>
+
+            </div>
+
+        </div>
+
+        <div class="col-sm-4">
+            <div class="burgerEaten">
+ 
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+        
+
+        <script language=javascript>
+
+            $("#addBurger").click(function (event) {
+                event.preventDefault();
+                var newBurger = {
+                    burger_name: $("[name=burger]").val().trim()   //declare a variable newBurger to take in value when user click #addBurger whiches matches burger_name on schema
+                };
+                $.ajax({   //use ajax to add user entry to burgers table
+                    type: "POST",
+                    url: "/burgers",
+                    data: newBurger
+                }).then(
+                    function () {
+                        console.log("added new burger");
+                        location.reload();   /// reload the current document
+                    }
+                );
+            });
+
+            $(".devoured").on("click", function (event) {   // when user clicks on devour button
+                //$("#deletedItems").innerHTML($(this).attr("name")); 
+                var id = $(this).attr("id");   // declare a variable id as document data id attached to this button
+                $.ajax({   //use ajax to delete item with this id on burgers table
+                    type: "DELETE",
+                    url: "/burgers/" + id
+                }).then(
+                    function () {
+                        
+                        console.log("deleted id ", id);
+                        location.reload();
+                    }
+                );
+            });
+
+        </script>
